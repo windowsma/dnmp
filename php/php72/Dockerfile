@@ -1,4 +1,5 @@
 FROM php:7.2-fpm
+MAINTAINER WindowsMa "windowsma@live.cn"  
 
 COPY ./sources.list.stretch /etc/apt/sources.list
 
@@ -109,10 +110,13 @@ RUN apt-get update \
 # Please turn on proxy (The proxy IP may be docker host IP or others):
 RUN pear config-set http_proxy http://10.0.75.1:1080
 
-RUN pecl install redis-3.1.4 \
+RUN pecl install yaf-3.0.6 \
+    && docker-php-ext-enable yaf \
+    && :\
+    && pecl install redis-3.1.6 \
     && docker-php-ext-enable redis \
     && :\
-    && pecl install xdebug-2.6.0alpha1 \
+    && pecl install xdebug-2.6.0 \
     && docker-php-ext-enable xdebug \
     && :\
     && apt-get install -y libmagickwand-dev \
