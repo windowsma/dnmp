@@ -108,21 +108,46 @@ RUN apt-get update \
 # or
 #    `Package "xxx" does not have REST xml available`
 # Please turn on proxy (The proxy IP may be docker host IP or others):
-RUN pear config-set http_proxy http://10.0.75.1:1080
+#RUN pear config-set http_proxy http://10.0.75.1:1080
+#
+#RUN pecl install yaf-3.0.6 \
+#    && docker-php-ext-enable yaf \
+#    && :\
+#    && pecl install redis-3.1.6 \
+#   && docker-php-ext-enable redis \
+#    && :\
+#    && pecl install xdebug-2.6.0 \
+#    && docker-php-ext-enable xdebug \
+#    && :\
+#    && apt-get install -y libmagickwand-dev \
+#    && pecl install imagick-3.4.3 \
+#    && docker-php-ext-enable imagick \
+#    && :\
+#    && apt-get install -y libmemcached-dev zlib1g-dev \
+#    && pecl install memcached-3.0.4 \#
+#    && docker-php-ext-enable memcached
 
-RUN pecl install yaf-3.0.6 \
-    && docker-php-ext-enable yaf \
-    && :\
-    && pecl install redis-3.1.6 \
-    && docker-php-ext-enable redis \
-    && :\
-    && pecl install xdebug-2.6.0 \
-    && docker-php-ext-enable xdebug \
-    && :\
-    && apt-get install -y libmagickwand-dev \
-    && pecl install imagick-3.4.3 \
-    && docker-php-ext-enable imagick \
-    && :\
-    && apt-get install -y libmemcached-dev zlib1g-dev \
-    && pecl install memcached-3.0.4 \
-    && docker-php-ext-enable memcached
+COPY ./sdk/yaf-3.0.6.tgz /tmp/
+RUN cd /tmp/ \
+    tar -xf yaf-3.0.6.tgz && \
+    rm yaf-3.0.6.tgz && \
+    ( cd yaf-3.0.6.tgz && phpize && ./configure && make && make install ) && \
+    rm -r yaf-3.0.6.tgz && \
+    docker-php-ext-enable yaf
+
+COPY ./sdk/redis-3.1.6.tgz /tmp/
+RUN cd /tmp/ \
+    tar -xf redis-3.1.6.tgz && \
+    rm redis-3.1.6.tgz && \
+    ( cd redis-3.1.6.tgz && phpize && ./configure --enable-redis-igbinary && make && make install ) && \
+    rm -r redis-3.1.6.tgz && \
+    docker-php-ext-enable redis
+
+COPY ./sdk/memcached-3.0.4.tgz /tmp/
+RUN apt-get install -y libmemcached-dev zlib1g-dev \
+    cd /tmp/ \
+    tar -xf memcached-3.0.4.tgz && \
+    rm memcached-3.0.4.tgz && \
+    ( cd memcached-3.0.4.tgz && phpize && ./configure --enable-redis-igbinary && make && make install ) && \
+    rm -r memcached-3.0.4.tgz && \
+    docker-php-ext-enable memcached
