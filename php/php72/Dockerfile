@@ -128,7 +128,7 @@ RUN apt-get update \
 #    && docker-php-ext-enable memcached
 
 COPY ./sdk/yaf-3.0.6.tgz /tmp/
-RUN cd /tmp/ \
+RUN cd /tmp/ && \
     tar -xf yaf-3.0.6.tgz && \
     rm yaf-3.0.6.tgz && \
     ( cd yaf-3.0.6 && phpize && ./configure && make && make install ) && \
@@ -136,18 +136,18 @@ RUN cd /tmp/ \
     docker-php-ext-enable yaf
 
 COPY ./sdk/redis-3.1.6.tgz /tmp/
-RUN cd /tmp/ \
+RUN cd /tmp/&& \
     tar -xf redis-3.1.6.tgz && \
     rm redis-3.1.6.tgz && \
-    ( cd redis-3.1.6 && phpize && ./configure --enable-redis-igbinary && make && make install ) && \
+    ( cd redis-3.1.6 && phpize && ./configure && make && make install ) && \
     rm -r redis-3.1.6 && \
     docker-php-ext-enable redis
 
 COPY ./sdk/memcached-3.0.4.tgz /tmp/
-RUN apt-get install -y libmemcached-dev zlib1g-dev \
-    cd /tmp/ \
+RUN apt-get install -y libmemcached-dev zlib1g-dev && \
+    cd /tmp/ && \
     tar -xf memcached-3.0.4.tgz && \
     rm memcached-3.0.4.tgz && \
-    ( cd memcached-3.0.4 && phpize && ./configure --enable-redis-igbinary && make && make install ) && \
+    ( cd memcached-3.0.4 && phpize && ./configure && make && make install ) && \
     rm -r memcached-3.0.4 && \
     docker-php-ext-enable memcached
