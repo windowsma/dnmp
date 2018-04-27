@@ -41,6 +41,7 @@ services:
             - /mnt/data:/mnt/data:rw
             - /tmp/:/tmp/:rw
             - ./log/mysql/:/usr/local/mysql/:rw
+            - ./lib/mysql-files:/var/lib/mysql-files/:rw
         environment:
             MYSQL_ROOT_PASSWORD: "123456"
 
