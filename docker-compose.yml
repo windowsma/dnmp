@@ -2,13 +2,13 @@ version: '2'
 
 services:
     nginx:
-        image: nginx:alpine
+        image: nginx
         restart: always
         ports:
             - "80:80"
             - "443:443"
         volumes:
-            - ./conf/nginx/conf.d:/etc/nginx/conf.d/:rw
+            - ./conf/nginx/conf.d/:/etc/nginx/conf.d/:rw
             - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - ./conf/nginx/enable-php.conf:/etc/nginx/enable-php.conf:ro
             - ./log/nginx/:/var/log/nginx/:rw
@@ -38,9 +38,9 @@ services:
             - "3306:3306"
         volumes:
             - ./conf/mysql/my.cnf:/etc/mysql/my.cnf:ro
-            - ./mysql/:/mnt/mysql:rw
-            - ./log/mysql/:/var/log/mysql/:rw
-            - ./lib/mysql-files:/var/lib/mysql-files:rw
+            - /mnt/data:/mnt/data:rw
+            - /tmp/:/tmp/:rw
+            - ./log/mysql/:/usr/local/mysql/:rw
         environment:
             MYSQL_ROOT_PASSWORD: "123456"
 
